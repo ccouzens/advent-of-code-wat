@@ -9,9 +9,12 @@
     "typescript": "^5.3.2"
   },
   "scripts": {
-    "typescript": "tsc",
-    "typecheck": "tsc --noEmit",
+    "build:typescript": "tsc",
+    "build:typescript:watch": "tsc --watch",
+    "build:wat": "make",
     "format:write": "prettier --write .",
-    "test": "jest"
+    "serve": "python3 -m http.server --bind 127.0.0.1 --directory src/",
+    "test": "jest",
+    "typecheck": "tsc --noEmit"
   }
 }
