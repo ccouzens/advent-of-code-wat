@@ -1,0 +1,28 @@
+on:
+  push:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: install wabt
+        run: sudo apt-get install wabt
+
+      - name: Build wasm
+        run: make
+
+      - name: Install node-dependencies
+        run: npm install
+
+      - name: run tests
+        run: npm test
+
+      - name: run typecheck
+        run: npm run typecheck
+
+      - name: format check
+        run: npm run format:check

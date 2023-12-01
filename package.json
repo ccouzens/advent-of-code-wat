@@ -16,6 +16,7 @@
     "build:typescript:watch": "tsc --watch",
     "build:wat": "make",
     "format:write": "prettier --write .",
+    "format:check": "prettier --check .",
     "serve": "python3 -m http.server --bind 127.0.0.1 --directory src/",
     "test": "jest",
     "typecheck": "tsc --noEmit"
