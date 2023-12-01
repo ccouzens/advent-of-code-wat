@@ -32,13 +32,8 @@ export function calculate(
   mem: WebAssembly.Memory,
   calculateWasm: CalculatorExports["calculate"],
 ): number {
-  const cleanInput = inputString
-    .split("\n")
-    .map((l) => l.trim())
-    .filter((l) => l)
-    .join("\n");
   const memView = new Uint8Array(mem.buffer);
-  const { written } = textEncoder.encodeInto(cleanInput, memView);
+  const { written } = textEncoder.encodeInto(inputString, memView);
   memView[written] = "\n".charCodeAt(0);
   return calculateWasm(written + 1);
 }
