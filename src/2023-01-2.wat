@@ -15,8 +15,8 @@
     (local $char i32)
     (local $chars i64)
     (local.set $char (i32.load8_u (local.get $i)))
-    (if (i32.and (i32.ge_u (local.get $char) (i32.const 48)) (i32.le_u (local.get $char) (i32.const 57)))
-      (return (i32.sub (local.get $char) (i32.const 48)))
+    (if (i32.and (i32.ge_u (local.get $char) (i32.const 0x30)) (i32.lt_u (local.get $char) (i32.const 0x3A)))
+      (return (i32.sub (local.get $char) (i32.const 0x30)))
     )
 
     (local.set $chars (i64.load (local.get $i)))
@@ -51,7 +51,7 @@
       (return (i32.const 9))
     )
 
-    (return (i32.const -1))
+    (i32.const -1)
   )
 
   (func (export "calculate") (param $byteLength i32) (result i32)
@@ -60,14 +60,12 @@
     (local $firstNum i32)
     (local $lastNum i32)
     (local $i i32)
-    (local $char i32)
     (local $num i32)
 
     (loop $loop
       (if (i32.lt_u (local.get $i) (local.get $byteLength))
         (then
-          (local.tee $char (i32.load8_u (local.get $i)))
-          (if (i32.and (i32.eq (i32.const 10)) (local.get $seenNum))
+          (if (i32.and (i32.eq (i32.const 0x0A) (i32.load8_u (local.get $i))) (local.get $seenNum))
             (then
               (local.set $sum
                 (i32.add

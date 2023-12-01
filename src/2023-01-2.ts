@@ -5,7 +5,7 @@ export interface CalculatorExports {
 
 const textEncoder = new TextEncoder();
 
-function stringTo8Byte(input: string): WebAssembly.Global<"i64"> {
+function stringToI64(input: string): WebAssembly.Global<"i64"> {
   const bytes = new Uint8Array(8);
   textEncoder.encodeInto(input, bytes);
   const longs = new BigUint64Array(bytes.buffer);
@@ -14,16 +14,16 @@ function stringTo8Byte(input: string): WebAssembly.Global<"i64"> {
 
 export const imports: WebAssembly.Imports = {
   nums: {
-    zero: stringTo8Byte("zero"),
-    one: stringTo8Byte("one"),
-    two: stringTo8Byte("two"),
-    three: stringTo8Byte("three"),
-    four: stringTo8Byte("four"),
-    five: stringTo8Byte("five"),
-    six: stringTo8Byte("six"),
-    seven: stringTo8Byte("seven"),
-    eight: stringTo8Byte("eight"),
-    nine: stringTo8Byte("nine"),
+    zero: stringToI64("zero"),
+    one: stringToI64("one"),
+    two: stringToI64("two"),
+    three: stringToI64("three"),
+    four: stringToI64("four"),
+    five: stringToI64("five"),
+    six: stringToI64("six"),
+    seven: stringToI64("seven"),
+    eight: stringToI64("eight"),
+    nine: stringToI64("nine"),
   },
 };
 
