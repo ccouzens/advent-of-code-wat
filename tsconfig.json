@@ -8,6 +8,6 @@
     "module": "ES2022",
     "moduleResolution": "Bundler"
   },
-  "exclude": ["src/*.test.ts"],
+  "exclude": ["src/*/test.ts"],
   "$schema": "https://json.schemastore.org/tsconfig"
 }

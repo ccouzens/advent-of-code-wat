@@ -11,7 +11,7 @@ all : $(wasms)
 
 .PHONY : clean
 clean :
-	rm -f $(wasms) src/*/script.js
+	rm -f $(wasms) src/*/*.js
 
 %.wasm: %.wat
 	wat2wasm $< -o $@
