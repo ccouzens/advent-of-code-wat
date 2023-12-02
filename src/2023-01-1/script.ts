@@ -1,26 +1,24 @@
-export interface WrappingPaperCalculatorExports {
+export interface CalculatorExports {
   mem: WebAssembly.Memory;
   calculate: (length: number) => number;
 }
 
+const textEncoder = new TextEncoder();
+
 export function calculate(
-  dimensionsString: string,
+  inputString: string,
   mem: WebAssembly.Memory,
-  calculateWasm: WrappingPaperCalculatorExports["calculate"],
+  calculateWasm: CalculatorExports["calculate"],
 ): number {
-  let lineCount = 0;
-  const memView = new Uint8Array(mem.buffer);
-  for (const line of dimensionsString
+  const cleanInput = inputString
     .split("\n")
     .map((l) => l.trim())
-    .filter((l) => l)) {
-    const [x, y, z] = line.split("x").map((v) => parseInt(v, 10));
-    memView[lineCount * 3 + 0] = x!;
-    memView[lineCount * 3 + 1] = y!;
-    memView[lineCount * 3 + 2] = z!;
-    lineCount++;
-  }
-  return calculateWasm(lineCount);
+    .filter((l) => l)
+    .join("\n");
+  const memView = new Uint8Array(mem.buffer);
+  const { written } = textEncoder.encodeInto(cleanInput, memView);
+  memView[written] = "\n".charCodeAt(0);
+  return calculateWasm(written + 1);
 }
 
 export async function main() {
@@ -28,11 +26,9 @@ export async function main() {
   const output = document.getElementById("output")! as HTMLPreElement;
   const button = document.getElementById("submit")! as HTMLButtonElement;
 
-  const module = await WebAssembly.instantiateStreaming(
-    fetch("2015-02-1.wasm"),
-  );
+  const module = await WebAssembly.instantiateStreaming(fetch("compute.wasm"));
   const instanceExports = module.instance
-    .exports as unknown as WrappingPaperCalculatorExports;
+    .exports as unknown as CalculatorExports;
   function eventListener() {
     output.textContent = `${calculate(
       input.value,

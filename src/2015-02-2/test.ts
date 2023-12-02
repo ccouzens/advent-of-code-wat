@@ -1,10 +1,10 @@
 import fs from "node:fs/promises";
-import { calculate, type WrappingPaperCalculatorExports } from "./2015-02-2";
+import { calculate, type WrappingPaperCalculatorExports } from "./script";
 
 let instanceExports: undefined | WrappingPaperCalculatorExports;
 
 beforeAll(async () => {
-  const buffer = await fs.readFile(__filename.replace(".test.ts", ".wasm"));
+  const buffer = await fs.readFile(`${__dirname}/compute.wasm`);
   const module = await WebAssembly.instantiate(buffer);
   instanceExports = module.instance
     .exports as unknown as WrappingPaperCalculatorExports;

@@ -44,7 +44,7 @@ export async function main() {
   const button = document.getElementById("submit")! as HTMLButtonElement;
 
   const module = await WebAssembly.instantiateStreaming(
-    fetch("2023-01-2.wasm"),
+    fetch("compute.wasm"),
     imports,
   );
   const instanceExports = module.instance

@@ -28,9 +28,7 @@ export async function main() {
   const output = document.getElementById("output")! as HTMLPreElement;
   const button = document.getElementById("submit")! as HTMLButtonElement;
 
-  const module = await WebAssembly.instantiateStreaming(
-    fetch("2015-02-2.wasm"),
-  );
+  const module = await WebAssembly.instantiateStreaming(fetch("compute.wasm"));
   const instanceExports = module.instance
     .exports as unknown as WrappingPaperCalculatorExports;
   function eventListener() {

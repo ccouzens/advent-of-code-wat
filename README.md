@@ -47,14 +47,3 @@ make
 npm run build:typescript
 npm run serve
 ```
-
-## Scaffolding a solution
-
-```bash
-SOURCE=2015-02-1
-DEST=2015-02-2
-cp "src/$SOURCE.test.ts" "src/$DEST.test.ts"
-cp "src/$SOURCE.html" "src/$DEST.html"
-cp "src/$SOURCE.wat" "src/$DEST.wat"
-cp "src/$SOURCE.ts" "src/$DEST.ts"
-```

@@ -1,6 +1,6 @@
 export interface FloorCalculatorExports {
   mem: WebAssembly.Memory;
-  calculatePosition: (length: number) => number;
+  floorCalculator: (length: number) => number;
 }
 
 const encoder = new TextEncoder();
@@ -8,7 +8,7 @@ const input = document.getElementById("input")! as HTMLTextAreaElement;
 const output = document.getElementById("output")! as HTMLPreElement;
 const button = document.getElementById("submit")! as HTMLButtonElement;
 
-const module = await WebAssembly.instantiateStreaming(fetch("2015-01-2.wasm"));
+const module = await WebAssembly.instantiateStreaming(fetch("compute.wasm"));
 const instanceExports = module.instance
   .exports as unknown as FloorCalculatorExports;
 function eventListener() {
@@ -16,9 +16,7 @@ function eventListener() {
   new Uint8Array(instanceExports.mem.buffer, 0, directions.length).set(
     directions,
   );
-  output.textContent = `${instanceExports.calculatePosition(
-    directions.length,
-  )}`;
+  output.textContent = `${instanceExports.floorCalculator(directions.length)}`;
 }
 
 input.addEventListener("change", eventListener);
