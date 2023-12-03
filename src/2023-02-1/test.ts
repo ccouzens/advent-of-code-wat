@@ -1,11 +1,11 @@
 import fs from "node:fs/promises";
-import { compute } from "./script";
+import { compute, imports, type ComputerExports } from "./script";
 
-let computeModule: undefined | WebAssembly.Module;
+let computer: undefined | ComputerExports;
 
 beforeAll(async () => {
   const buffer = await fs.readFile(`${__dirname}/compute.wasm`);
-  computeModule = await WebAssembly.compile(buffer);
+  computer = (await WebAssembly.instantiate(buffer, imports)).instance.exports as unknown as ComputerExports;
 });
 
 const testCase = `
@@ -17,5 +17,5 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
 `;
 
 test("problem example gives 8", async () => {
-  expect(await compute(testCase, computeModule!)).toEqual(1 + 2 + 5);
+  expect(compute(testCase, computer!)).toEqual(1 + 2 + 5);
 });

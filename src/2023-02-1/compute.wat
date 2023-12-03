@@ -1,18 +1,20 @@
 (module
-  (import "reader" "nextGame" (func $nextGame (result i32)))
-  (import "reader" "nextDraw" (func $nextDraw (result i32) (result i32) (result i32)))
+  (import "reader" "nextGame" (func $nextGame (param externref) (result i32)))
+  (import "reader" "nextDraw" (func $nextDraw (param externref) (result i32) (result i32) (result i32)))
 
-  (func (export "compute") (result i32)
+  (func (export "compute") (param $instance externref) (result i32)
     (local $sum i32)
     (local $gameId i32)
     (local $drawRed i32)
     (local $drawGreen i32)
     (local $drawBlue i32)
     (loop $gameLoop
+      (local.get $instance)
       (local.set $gameId (call $nextGame))
       (if (i32.ne (local.get $gameId) (i32.const -1))
         (then
           (loop $drawLoop
+            (local.get $instance)
             (call $nextDraw)
             (local.set $drawBlue)
             (local.set $drawGreen)

@@ -1,3 +1,7 @@
+export interface ComputerExports {
+  compute: (instance: Instance) => number;
+}
+
 interface Draw {
   r: number;
   g: number;
@@ -9,13 +13,38 @@ interface Game {
   draws: Draw[];
 }
 
+interface Instance {
+  gameIndex: number;
+  drawIndex: number;
+  games: Game[];
+}
+
+export const imports: WebAssembly.Imports = {
+  reader: {
+    nextGame(i: Instance): number {
+      i.gameIndex++;
+      i.drawIndex = -1;
+      return i.games[i.gameIndex]?.id ?? -1;
+    },
+    nextDraw(i: Instance): [number, number, number] {
+      i.drawIndex++;
+      const draw = i.games[i.gameIndex]?.draws[i.drawIndex];
+      if (draw === undefined) {
+        return [-1, -1, -1];
+      } else {
+        return [draw.r ?? 0, draw.g ?? 0, draw.b ?? 0];
+      }
+    },
+  },
+};
+
 const gameParser = /^Game (?<id>\d+):(?<draws>.*)$/;
 const drawParser = /(?<count>\d+) (?<colour>red|green|blue)/g;
 
-export async function compute(
+export function compute(
   inputString: string,
-  computeModule: WebAssembly.Module,
-): Promise<number> {
+  computer: ComputerExports,
+): number {
   const gameStrings = inputString
     .split("\n")
     .map((l) => l.trim())
@@ -52,29 +81,15 @@ export async function compute(
         }),
     };
   });
-  let gameIndex = -1;
-  let drawIndex = -1;
+  const instance = {
+    gameIndex: -1,
+    drawIndex: -1,
+    games,
+  };
 
-  const computeInstance = await WebAssembly.instantiate(computeModule, {
-    reader: {
-      nextGame(): number {
-        gameIndex++;
-        drawIndex = -1;
-        return games[gameIndex]?.id ?? -1;
-      },
-      nextDraw(): [number, number, number] {
-        drawIndex++;
-        const draw = games[gameIndex]?.draws[drawIndex];
-        if (draw === undefined) {
-          return [-1, -1, -1];
-        } else {
-          return [draw.r ?? 0, draw.g ?? 0, draw.b ?? 0];
-        }
-      },
-    },
-  });
-
-  return (computeInstance.exports["compute"] as () => number)();
+  return (computer.compute)(
+    instance,
+  );
 }
 
 export async function main() {
@@ -82,9 +97,9 @@ export async function main() {
   const output = document.getElementById("output")! as HTMLPreElement;
   const button = document.getElementById("submit")! as HTMLButtonElement;
 
-  const module = await WebAssembly.compileStreaming(fetch("compute.wasm"));
+  const computer= (await WebAssembly.instantiateStreaming(fetch("compute.wasm"), imports)).instance.exports as unknown as ComputerExports;
   async function eventListener() {
-    output.textContent = `${await compute(input.value, module)}`;
+    output.textContent = `${compute(input.value, computer)}`;
   }
 
   input.addEventListener("change", eventListener);
