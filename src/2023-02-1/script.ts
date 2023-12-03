@@ -87,9 +87,7 @@ export function compute(
     games,
   };
 
-  return (computer.compute)(
-    instance,
-  );
+  return computer.compute(instance);
 }
 
 export async function main() {
@@ -97,7 +95,9 @@ export async function main() {
   const output = document.getElementById("output")! as HTMLPreElement;
   const button = document.getElementById("submit")! as HTMLButtonElement;
 
-  const computer= (await WebAssembly.instantiateStreaming(fetch("compute.wasm"), imports)).instance.exports as unknown as ComputerExports;
+  const computer = (
+    await WebAssembly.instantiateStreaming(fetch("compute.wasm"), imports)
+  ).instance.exports as unknown as ComputerExports;
   async function eventListener() {
     output.textContent = `${compute(input.value, computer)}`;
   }

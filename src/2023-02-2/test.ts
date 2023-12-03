@@ -5,7 +5,8 @@ let computer: undefined | ComputerExports;
 
 beforeAll(async () => {
   const buffer = await fs.readFile(`${__dirname}/compute.wasm`);
-  computer = (await WebAssembly.instantiate(buffer, imports)).instance.exports as unknown as ComputerExports;
+  computer = (await WebAssembly.instantiate(buffer, imports)).instance
+    .exports as unknown as ComputerExports;
 });
 
 const testCase = `
