@@ -2,7 +2,7 @@
   (memory (export "mem") 1)
 
   ;; Read a cell of memory.
-  ;; Out of bounds and `.` non gear symbols will be read as 10.
+  ;; Out of bounds and any non gear symbols will be read as 10.
   ;; Digits will be read as their digit value.
   ;; Gears will be read as 11.
   (func $readCell (param $width i32) (param $height i32) (param $x i32) (param $y i32) (result i32)
