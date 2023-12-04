@@ -8,6 +8,7 @@ src/2023-01-2/compute.wasm \
 src/2023-02-1/compute.wasm \
 src/2023-02-2/compute.wasm \
 src/2023-03-1/compute.wasm \
+src/2023-03-2/compute.wasm \
 
 .PHONY : all
 all : $(wasms)
