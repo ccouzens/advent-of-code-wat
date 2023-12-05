@@ -20,3 +20,6 @@ clean :
 %.wasm: %.wat
 	wat2wasm $< -o $@
 
+%.ohm-bundle.js %.ohm-bundle.d.ts : %.ohm
+	npx ohm generateBundles --withTypes $<
+

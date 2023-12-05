@@ -1,0 +1,8 @@
+Cards {
+  Cards = card+
+  card = "Card" number ":" winningNumbers " |" ownNumbers
+  winningNumbers = number*
+  ownNumbers = number*
+  number = " "+ digits
+  digits = digit+
+}
