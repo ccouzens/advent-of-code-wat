@@ -18,5 +18,5 @@ clean :
 	rm -f $(wasms) src/*/*.js
 
 %.wasm: %.wat
-	wat2wasm $< -o $@
+	wat2wasm --debug-names $< -o $@
 
