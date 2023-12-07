@@ -11,6 +11,7 @@ src/2023-03-1/compute.wasm \
 src/2023-03-2/compute.wasm \
 src/2023-04-1/compute.wasm \
 src/2023-04-2/compute.wasm \
+src/2023-05-1/compute.wasm \
 
 .PHONY : all
 all : $(wasms)
