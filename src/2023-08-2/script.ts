@@ -1,19 +1,43 @@
+type Logger = (
+  event: "ghostEnd",
+  ghostIndex: number,
+  networkIndex: number,
+  stepIndex: bigint,
+  instructionIndex: number,
+) => void;
+
 export interface ComputerExports {
   mem: WebAssembly.Memory;
   compute: (
     instructionsCount: number,
     networkPointer: number,
     networkCount: number,
+    maxSteps: bigint,
+    logger: Logger,
   ) => bigint;
 }
 
-export const imports: WebAssembly.Imports = {};
+export const imports: WebAssembly.Imports = {
+  js: {
+    logGhostEnd(
+      logger: Logger,
+      ghostIndex: number,
+      networkIndex: number,
+      stepIndex: bigint,
+      instructionIndex: number,
+    ) {
+      logger("ghostEnd", ghostIndex, networkIndex, stepIndex, instructionIndex);
+    },
+  },
+};
 
 const textEncoder = new TextEncoder();
 
 export function compute(
   inputString: string,
+  maxSteps: string,
   computer: ComputerExports,
+  logger: Logger,
 ): bigint {
   /*
   mem layout
@@ -83,22 +107,52 @@ export function compute(
     instructions!.length,
     networkPointer,
     networkLines!.length,
+    BigInt(maxSteps),
+    logger,
   );
 }
 
 export async function main() {
   const input = document.getElementById("input")! as HTMLTextAreaElement;
+  const maxSteps = document.getElementById(
+    "maxIterations",
+  )! as HTMLInputElement;
   const output = document.getElementById("output")! as HTMLPreElement;
   const button = document.getElementById("submit")! as HTMLButtonElement;
+  const ghostInfo = document.getElementById("ghostInfo")! as HTMLDivElement;
 
   const computer = (
     await WebAssembly.instantiateStreaming(fetch("compute.wasm"), imports)
   ).instance.exports as unknown as ComputerExports;
   async function eventListener() {
-    output.textContent = `${compute(input.value, computer)}`;
+    ghostInfo.textContent = "";
+    const p = document.createElement("p");
+    const ghostDivs: HTMLDivElement[] = [];
+
+    output.textContent = `${compute(
+      input.value,
+      maxSteps.value,
+      computer,
+      function (event, ghostIndex, networkIndex, stepIndex, instructionIndex) {
+        if (event !== "ghostEnd") {
+          return;
+        }
+        while (ghostIndex >= ghostDivs.length) {
+          const d = document.createElement("div");
+          const label = document.createElement("p");
+          ghostInfo.appendChild(d);
+          ghostDivs.push(d);
+          d.appendChild(label);
+          label.textContent = `Ghost ${ghostDivs.length}`;
+        }
+        const p = document.createElement("p");
+        p.textContent = `Ghost came to end node ${networkIndex} after ${stepIndex} steps at instruction ${instructionIndex}`;
+        ghostDivs[ghostIndex]?.appendChild(p);
+      },
+    )}`;
   }
 
-  input.addEventListener("change", eventListener);
+  document.body.addEventListener("change", eventListener);
   button.addEventListener("click", eventListener);
   eventListener();
 }

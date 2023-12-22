@@ -1,4 +1,5 @@
 (module
+  (import "js" "logGhostEnd" (func $logGhostEnd (param externref) (param i32) (param i32) (param i64) (param i32)))
   (memory (export "mem") 1)
 
   (func $initialiseGhosts
@@ -62,6 +63,8 @@
     (param $networkPointer i32)
     (param $ghostPointer i32)
     (param $ghostCount i32)
+    (param $loggerInstance externref)
+    (param $stepCount i64)
     (result i32)
 
     (local $ghostIndex i32)
@@ -108,8 +111,15 @@
         i32.add
         i32.load16_u
         i32.const 0x5A ;; ASCII Z
-        i32.ne
+        i32.eq
         if
+          local.get $loggerInstance
+          local.get $ghostIndex
+          local.get $ghostNetworkIndex
+          local.get $stepCount
+          local.get $instructionIndex
+          call $logGhostEnd
+        else
           i32.const 0
           local.set $ghostsFinished
         end
@@ -133,6 +143,8 @@
     (param $instructionCount i32)
     (param $networkPointer i32)
     (param $networkCount i32)
+    (param $maxSteps i64)
+    (param $loggerInstance externref)
     (result i64)
 
     (local $stepCount i64)
@@ -162,6 +174,8 @@
       local.get $networkPointer
       local.get $ghostPointer
       local.get $ghostCount
+      local.get $loggerInstance
+      local.get $stepCount
       call $advanceGhosts
       i32.eqz
       
@@ -176,8 +190,10 @@
         local.get $stepCount
         i64.const 1
         i64.add
-        local.set $stepCount
-        br $moveLoop
+        local.tee $stepCount
+        local.get $maxSteps
+        i64.lt_u
+        br_if $moveLoop
       end
     end
 

@@ -4,12 +4,17 @@
     <meta charset="UTF-8" />
     <title>Advent of Code 2023 day 8 part 2</title>
   </head>
+  <style>
+    body {
+      display: grid;
+    }
+  </style>
 
   <body>
-    <p>
-      Do not run with puzzle inputs as it will take a significant time to run.
-    </p>
-    <textarea id="input">
+    <label for="maxIterations">Maximum iterations</label>
+    <input id="maxIterations" type="number" value="100000" />
+    <label for="input">Puzzle Input</label>
+    <textarea id="input" rows="20">
     LR
 
     11A = (11B, XXX)
@@ -22,8 +27,11 @@
     XXX = (XXX, XXX)
   </textarea
     >
-    <pre id="output"></pre>
     <button id="submit">Submit</button>
+    <label for="output">Puzzle Answer</label>
+    <pre id="output"></pre>
+    <label for="ghostInfo">👻 info</label>
+    <div id="ghostInfo"></div>
     <script type="module">
       import { main } from "./script.js";
       main().catch(console.error);

@@ -23,5 +23,5 @@ XXX = (XXX, XXX)
 `;
 
 test("problem example gives 6", async () => {
-  expect(compute(testCase, computer!)).toEqual(6n);
+  expect(compute(testCase, "1000", computer!, () => {})).toEqual(6n);
 });
