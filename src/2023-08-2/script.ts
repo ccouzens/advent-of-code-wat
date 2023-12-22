@@ -126,7 +126,6 @@ export async function main() {
   ).instance.exports as unknown as ComputerExports;
   async function eventListener() {
     ghostInfo.textContent = "";
-    const p = document.createElement("p");
     const ghostDivs: HTMLDivElement[] = [];
 
     output.textContent = `${compute(
