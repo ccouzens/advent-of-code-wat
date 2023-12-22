@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Advent of Code 2023 day 8 part 2</title>
+  </head>
+
+  <body>
+    <textarea id="input">
+    LR
+
+    11A = (11B, XXX)
+    11B = (XXX, 11Z)
+    11Z = (11B, XXX)
+    22A = (22B, XXX)
+    22B = (22C, 22C)
+    22C = (22Z, 22Z)
+    22Z = (22B, 22B)
+    XXX = (XXX, XXX)
+  </textarea
+    >
+    <pre id="output"></pre>
+    <button id="submit">Submit</button>
+    <script type="module">
+      import { main } from "./script.js";
+      main().catch(console.error);
+    </script>
+  </body>
+</html>
